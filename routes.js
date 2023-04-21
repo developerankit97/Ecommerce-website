@@ -22,7 +22,7 @@ const requestHandler = (req, res) => {
         })
         return req.on('end', () => {
             const parsedData = Buffer.concat(body).toString();
-            fs.writeFile('message.txt', parsedData.split("=")[1], (err) => {
+            fs.writeFile('message.txt', parsedData.split("=")[0], (err) => {
                 res.writeHead(302, { 'Location': '/home' });
                 return res.end();
             });
