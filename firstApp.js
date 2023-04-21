@@ -1,11 +1,33 @@
 const http = require('http');
+const fs = require('fs');
 
 const server = http.createServer((req, res) => {
     const url = req.url;
+    const method = req.method;
     if (url == '/home') {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write('<h1>Welcome Home</h1>');
-        return res.end();
+        fs.readFile('message.txt', 'utf-8', (err, data) => {
+            if (data) {
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.write('<html>');
+                res.write('<head><title>Enter Message</title></head><body>');
+                res.write(data);
+                res.write('<form action="/message" method="POST"><input type="text" name="msg"><button type="submit">Add Message</button></form>');
+                res.write('</body></html>');
+                return res.end();
+            }
+        });
+    } else if (url == '/message' && method == 'POST') {
+        const body = [];
+        req.on('data', (chunk) => {
+            body.push(chunk);
+        })
+        return req.on('end', () => {
+            const parsedData = Buffer.concat(body).toString();
+            fs.writeFile('message.txt', parsedData.split("=")[1], (err) => {
+                res.writeHead(302, { 'Location': '/home' });
+                return res.end();
+            });
+        });
     } else if (url == '/about') {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.write('<h1>Welcome to About Us Page</h1>');
