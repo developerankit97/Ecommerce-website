@@ -1,1 +1,9 @@
-[{"title":"Book"},{"title":"Book"},{"title":"Book"},{"title":"First"},{"title":"New"},{"title":"Sedond"}]
+[
+    {
+        "id": "5sd5df",
+        "title": "A Book",
+        "imageUrl": "https://img.freepik.com/free-photo/book-composition-with-open-book_23-2147690555.jpg",
+        "description": "This is an awesome book!",
+        "price": "19"
+    }
+]
