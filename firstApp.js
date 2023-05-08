@@ -2,9 +2,9 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const { mongoConnect } = require('./util/database');
 const User = require('./models/user');
 require('dotenv').config();
+const mongoose = require('mongoose');
 
 const errorController = require('./controllers/error');
 
@@ -14,9 +14,9 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use((req, res, next) => {
-	User.findById('64591f486a4bc1364485c73d')
+	User.findById('645971da00381a9d191af8be')
 		.then((user) => {
-			req.user = new User(user.username, user.email, user.cart, user._id);
+			req.user = user;
 			next();
 		})
 		.catch((e) => console.error(e));
@@ -33,6 +33,10 @@ app.use(shopRoutes);
 
 // app.use(errorController.get404);
 
-mongoConnect(() => {
-	app.listen(4000);
-});
+mongoose
+	.connect(
+		`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.veoi4dk.mongodb.net/shop?retryWrites=true&w=majority`
+	)
+	.then(() => {
+		app.listen(4000);
+	});
