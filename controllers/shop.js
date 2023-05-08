@@ -75,36 +75,45 @@ exports.getIndex = (req, res, next) => {
 //     .catch(e => console.error(e));
 // }
 
-// exports.postCart = (req, res, next) => {
-//   const prodId = req.body.productId;
-//   let fetchedCard;
-//   let newQuantity = 1;
-//   req.user
-//     .getCart()
-//     .then(cart => {
-//       fetchedCard = cart;
-//       return cart.getProducts({ where: { id: prodId } });
-//     })
-//     .then(products => {
-//       let product;
-//       if (products.length > 0) {
-//         product = products[0];
-//       }
-//       if (product) {
-//         const oldQuantity = product.cartItem.qty;
-//         newQuantity = oldQuantity + 1;
-//         return product;
-//       }
-//       return Product.findByPk(prodId);
-//     })
-//     .then(product => {
-//       return fetchedCard.addProduct(product, { through: { qty: newQuantity } });
-//     })
-//     .then((response) => {
-//       console.log(response);
-//       res.redirect('/cart');
-//     })
-//     .catch(e => console.log(e));
+exports.postCart = (req, res, next) => {
+	const prodId = req.body.productId;
+	Product.findById(prodId)
+		.then((product) => {
+			return req.user.addToCart(product);
+		})
+		.then((result) => console.log(result))
+		.catch((err) => console.log(err));
+};
+// 	let fetchedCard;
+// 	let newQuantity = 1;
+// 	req.user
+// 		.getCart()
+// 		.then((cart) => {
+// 			fetchedCard = cart;
+// 			return cart.getProducts({ where: { id: prodId } });
+// 		})
+// 		.then((products) => {
+// 			let product;
+// 			if (products.length > 0) {
+// 				product = products[0];
+// 			}
+// 			if (product) {
+// 				const oldQuantity = product.cartItem.qty;
+// 				newQuantity = oldQuantity + 1;
+// 				return product;
+// 			}
+// 			return Product.findByPk(prodId);
+// 		})
+// 		.then((product) => {
+// 			return fetchedCard.addProduct(product, {
+// 				through: { qty: newQuantity },
+// 			});
+// 		})
+// 		.then((response) => {
+// 			console.log(response);
+// 			res.redirect('/cart');
+// 		})
+// 		.catch((e) => console.log(e));
 // };
 
 // exports.getOrders = (req, res, next) => {
